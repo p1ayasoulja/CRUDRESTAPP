@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+/target/
+/mvnw.cmd
+/mvnw
+/HELP.md
+/TaskManager.iml
+/.mvn/
+/.idea/
