@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+
 @Service
 public class TaskServiceImpl implements TaskService {
     private TaskRepo taskRepo;
@@ -19,11 +20,34 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(String title, boolean isCompleted) {
+        Task task = taskCreator(title, isCompleted);
+        return taskRepo.save(task);
+    }
+
+    @Override
+    public Task updateTask(Long id, String title, boolean completed) {
+
+        Task task = taskCreator(title, completed);
+        task.setId(id);
+        return taskRepo.save(task);
+    }
+
+    private Task taskCreator(String title, boolean isCompleted) {
         Task task = new Task();
         task.setCompleted(isCompleted);
         task.setTitle(title);
         task.setCreationDate(LocalDate.now());
+        return task;
 
-        return taskRepo.save(task);
+    }
+
+    @Override
+    public Task getTaskById(Long id) {
+        return taskRepo.findById(id).get();
+    }
+
+    @Override
+    public void deleteTaskById(Long id) {
+        taskRepo.deleteById(id);
     }
 }
