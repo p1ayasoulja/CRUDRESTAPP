@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -49,5 +50,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTaskById(Long id) {
         taskRepo.deleteById(id);
+    }
+
+    @Override
+    public List<Task> getAllTasks() {
+        return taskRepo.findAll();
     }
 }
