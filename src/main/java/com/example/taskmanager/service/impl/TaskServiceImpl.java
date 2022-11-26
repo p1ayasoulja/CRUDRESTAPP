@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    private TaskRepo taskRepo;
+    private final TaskRepo taskRepo;
 
     @Autowired
     public TaskServiceImpl(TaskRepo taskRepo) {
