@@ -2,22 +2,25 @@ package com.example.taskmanager.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
-
+@Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private boolean isCompleted;
+
     private LocalDate creationDate;
+    @Column(name = "title")
     private String title;
+
+    @ManyToMany(mappedBy = "tasks",fetch = FetchType.LAZY)
+    private List<User> users;
 
     public Long getId() {
         return id;

@@ -1,0 +1,65 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="1.0.0" author="AndreyGalanov">
+        <createTable tableName="tasks">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="creation_date" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="is_completed" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="title" type="varchar(200)">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.1" author="AndreyGalanov">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="username" type="varchar(200)">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.2" author="AndreyGalanov">
+        <createTable tableName="user_tasks">
+            <column name="user_id" type="BIGINT">
+            </column>
+            <column name="task_id" type="BIGINT">
+            </column>
+        </createTable>
+    </changeSet>
+
+<!--    <changeSet id="1.0.3" author="AndreyGalanov">-->
+<!--        <addForeignKeyConstraint baseColumnNames="user_id"-->
+<!--                                 baseTableName="user_tasks"-->
+<!--                                 constraintName="fk_user_tasks_user"-->
+<!--                                 onDelete="CASCADE"-->
+<!--                                 onUpdate="RESTRICT"-->
+<!--                                 referencedColumnNames="id"-->
+<!--                                 referencedTableName="users"/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="1.0.4" author="AndreyGalanov">-->
+<!--        <addForeignKeyConstraint baseColumnNames="task_id"-->
+<!--                                 baseTableName="user_tasks"-->
+<!--                                 constraintName="fk_user_tasks_tasks"-->
+<!--                                 onDelete="CASCADE"-->
+<!--                                 onUpdate="RESTRICT"-->
+<!--                                 referencedColumnNames="id"-->
+<!--                                 referencedTableName="tasks"/>-->
+<!--    </changeSet>-->
+
+</databaseChangeLog>
