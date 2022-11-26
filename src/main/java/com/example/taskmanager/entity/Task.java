@@ -13,8 +13,9 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "is_Completed")
     private boolean isCompleted;
-
+    @Column(name = "creation_Date")
     private LocalDate creationDate;
     @Column(name = "title")
     private String title;
@@ -53,4 +54,6 @@ public class Task {
     public void setTitle(String title) {
         this.title = title;
     }
+
+
 }

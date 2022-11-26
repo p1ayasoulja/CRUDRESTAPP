@@ -45,7 +45,7 @@ public class TaskController {
         ShowTaskResponse showTaskResponse = new ShowTaskResponse(task.isCompleted(), task.getTitle());
         return ResponseEntity.ok(showTaskResponse);
     }
-    @RequestMapping(value = "/alltasks", method = RequestMethod.GET)
+    @RequestMapping(value = "/tasks/all", method = RequestMethod.GET)
     @ApiOperation("Get all tasks")
     public ResponseEntity<ShowTaskList> getAllTasks() {
         List<Task> taskList = taskService.getAllTasks();
