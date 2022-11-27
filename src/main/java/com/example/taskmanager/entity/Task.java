@@ -1,12 +1,14 @@
 package com.example.taskmanager.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@ToString
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -54,6 +56,5 @@ public class Task {
     public void setTitle(String title) {
         this.title = title;
     }
-
 
 }

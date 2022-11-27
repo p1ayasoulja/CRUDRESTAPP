@@ -65,12 +65,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        User userById = userRepo.findById(id).get();
+        User userById = userRepo.findById(id).orElse(null);
         if (userById == null) {
             log.warn("IN findById - no use found by id : {}", id);
             return null;
         }
-        log.info("IN findById - user : {} found", userById);
+        log.info("IN findById - user : {} found", id);
         return userById;
     }
 
