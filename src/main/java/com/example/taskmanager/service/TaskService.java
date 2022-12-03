@@ -12,6 +12,7 @@ public interface TaskService {
     Task updateTask(Long id, String title, boolean completed);
 
     Task getTaskById(Long id);
+    Task getTaskByTitle(String title);
     List<Task> getAllTasks();
 
     void deleteTaskById(Long id);

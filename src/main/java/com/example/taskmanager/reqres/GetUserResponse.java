@@ -14,11 +14,11 @@ public class GetUserResponse {
         this.password = password;
     }
 
-    public String getUsername() {
+    public String setUsername() {
         return username;
     }
 
-    public String getPassword() {
+    public String setPassword() {
         return password;
     }
 }

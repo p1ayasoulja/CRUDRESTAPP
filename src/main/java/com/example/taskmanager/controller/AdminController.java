@@ -3,6 +3,7 @@ package com.example.taskmanager.controller;
 import com.example.taskmanager.entity.User;
 import com.example.taskmanager.reqres.GetUserResponse;
 import com.example.taskmanager.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation("Получение пользователся по идентификатору")
     public ResponseEntity<GetUserResponse> getUserById(@PathVariable(name = "id") Long id) {
         User user = userService.findById(id);
         if (user == null) {

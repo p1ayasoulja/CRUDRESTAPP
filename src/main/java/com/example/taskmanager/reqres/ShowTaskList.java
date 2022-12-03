@@ -17,7 +17,7 @@ public class ShowTaskList {
     }
 
     @JsonProperty("taskList")
-    public List<ShowTaskResponse> getShowTaskLists() {
+    public List<ShowTaskResponse> setShowTaskLists() {
         return showTaskLists;
     }
 }

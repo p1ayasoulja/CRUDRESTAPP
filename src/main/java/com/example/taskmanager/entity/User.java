@@ -18,6 +18,8 @@ public class User {
     private String username;
     @Column(name = "password")
     private String password;
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tasks", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")})

@@ -14,7 +14,7 @@ public class UpdateTaskResponse {
     }
 
     @JsonProperty("id")
-    public Long getId() {
+    public Long setId() {
         return id;
     }
 }

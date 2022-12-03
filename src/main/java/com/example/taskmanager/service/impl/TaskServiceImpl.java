@@ -56,4 +56,8 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllTasks() {
         return taskRepo.findAll();
     }
+
+    public Task getTaskByTitle(String title) {
+        return taskRepo.findByTitle(title);
+    }
 }

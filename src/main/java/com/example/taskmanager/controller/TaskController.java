@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping
 public class TaskController {
     private final TaskService taskService;
 
@@ -23,7 +22,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.POST)
-    @ApiOperation("Create task")
+    @ApiOperation("Создать задачу")
     public ResponseEntity<CreateTaskResponse> createTask(@RequestBody CreateTaskRequest createTaskRequest) {
         Task newTask = taskService.createTask(createTaskRequest.getTitle(), createTaskRequest.isCompleted());
         CreateTaskResponse createTaskResponse = new CreateTaskResponse(newTask.getId());
@@ -31,35 +30,44 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT)
-    @ApiOperation("Update task")
+    @ApiOperation("Обновить задачу")
     public ResponseEntity<UpdateTaskResponse> updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest updateTaskRequest) {
         Task newTask = taskService.updateTask(id, updateTaskRequest.getTitle(), updateTaskRequest.isCompleted());
         UpdateTaskResponse updateTaskResponse = new UpdateTaskResponse(newTask.getId());
         return ResponseEntity.ok(updateTaskResponse);
     }
 
+    @RequestMapping(value = "/tasks/filter", method = RequestMethod.GET)
+    @ApiOperation("Отфильтровать задачи по описанию")
+    public ResponseEntity<ShowTaskResponse> FilterTaskByTitle(@RequestBody FilterRequest filterRequest) {
+        Task newTask = taskService.getTaskByTitle(filterRequest.getFilter());
+        ShowTaskResponse showTaskResponse = new ShowTaskResponse(newTask.isCompleted(), newTask.getTitle());
+        return ResponseEntity.ok(showTaskResponse);
+    }
+
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.GET)
-    @ApiOperation("Get task by Id")
+    @ApiOperation("Получить задачу по идентификатору")
     public ResponseEntity<ShowTaskResponse> getTaskById(@PathVariable("id") Long id) {
         Task task = taskService.getTaskById(id);
         ShowTaskResponse showTaskResponse = new ShowTaskResponse(task.isCompleted(), task.getTitle());
         return ResponseEntity.ok(showTaskResponse);
     }
+
     @RequestMapping(value = "/tasks/all", method = RequestMethod.GET)
-    @ApiOperation("Get all tasks")
+    @ApiOperation("Получить весь список задач")
     public ResponseEntity<ShowTaskList> getAllTasks() {
         List<Task> taskList = taskService.getAllTasks();
         List<ShowTaskResponse> taskListResponse = new ArrayList<>();
         taskList.forEach(task -> taskListResponse.add(
                 new ShowTaskResponse(task.isCompleted(),
-                task.getTitle()))
+                        task.getTitle()))
         );
         ShowTaskList showTaskList = new ShowTaskList(taskListResponse);
         return ResponseEntity.ok(showTaskList);
     }
 
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE)
-    @ApiOperation("Delete task")
+    @ApiOperation("Удалить задачу")
     public void deleteTaskById(@PathVariable("id") Long id) {
         taskService.deleteTaskById(id);
     }
