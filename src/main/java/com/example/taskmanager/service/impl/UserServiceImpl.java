@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -65,13 +66,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        User userById = userRepo.findById(id).orElse(null);
-        if (userById == null) {
+        Optional<User> userOpt = userRepo.findById(id);
+        if (userOpt.isEmpty()) {
             log.warn("IN findById - no use found by id : {}", id);
             return null;
         }
         log.info("IN findById - user : {} found", id);
-        return userById;
+        return userOpt.get();
     }
 
     @Override
@@ -79,4 +80,6 @@ public class UserServiceImpl implements UserService {
         userRepo.deleteById(id);
         log.info("IN deleteUser - user : {} deleted", id);
     }
+
+
 }

@@ -1,7 +1,7 @@
 package com.example.taskmanager.service;
 
+import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.entity.User;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,4 +16,5 @@ public interface UserService {
     User findById(Long id);
 
     void deleteUser(Long id);
+
 }

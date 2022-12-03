@@ -1,7 +1,6 @@
 package com.example.taskmanager.service;
 
 import com.example.taskmanager.entity.Task;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,5 +15,6 @@ public interface TaskService {
     List<Task> getAllTasks();
 
     void deleteTaskById(Long id);
+
 
 }
