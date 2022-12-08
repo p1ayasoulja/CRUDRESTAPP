@@ -7,7 +7,7 @@ public class FilterRequest {
     @ApiModelProperty("Описание задачи")
     String filter;
 
-    public FilterRequest(@JsonProperty("filter") String filter) {
+    public FilterRequest(@JsonProperty("title") String filter) {
         this.filter = filter;
     }
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
 
@@ -21,7 +22,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @RequestMapping(value = "/tasks", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @ApiOperation("Создать задачу")
     public ResponseEntity<CreateTaskResponse> createTask(@RequestBody CreateTaskRequest createTaskRequest) {
         Task newTask = taskService.createTask(createTaskRequest.getTitle(), createTaskRequest.isCompleted());
@@ -29,7 +30,7 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createTaskResponse);
     }
 
-    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation("Обновить задачу")
     public ResponseEntity<UpdateTaskResponse> updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest updateTaskRequest) {
         Task newTask = taskService.updateTask(id, updateTaskRequest.getTitle(), updateTaskRequest.isCompleted());
@@ -37,7 +38,7 @@ public class TaskController {
         return ResponseEntity.ok(updateTaskResponse);
     }
 
-    @RequestMapping(value = "/tasks/filter", method = RequestMethod.GET)
+    @RequestMapping(value = "/filter", method = RequestMethod.GET)
     @ApiOperation("Отфильтровать задачи по описанию")
     public ResponseEntity<ShowTaskResponse> FilterTaskByTitle(@RequestBody FilterRequest filterRequest) {
         Task newTask = taskService.getTaskByTitle(filterRequest.getFilter());
@@ -45,7 +46,7 @@ public class TaskController {
         return ResponseEntity.ok(showTaskResponse);
     }
 
-    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation("Получить задачу по идентификатору")
     public ResponseEntity<ShowTaskResponse> getTaskById(@PathVariable("id") Long id) {
         Task task = taskService.getTaskById(id);
@@ -53,7 +54,7 @@ public class TaskController {
         return ResponseEntity.ok(showTaskResponse);
     }
 
-    @RequestMapping(value = "/tasks/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ApiOperation("Получить весь список задач")
     public ResponseEntity<ShowTaskList> getAllTasks() {
         List<Task> taskList = taskService.getAllTasks();
@@ -66,7 +67,7 @@ public class TaskController {
         return ResponseEntity.ok(showTaskList);
     }
 
-    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ApiOperation("Удалить задачу")
     public void deleteTaskById(@PathVariable("id") Long id) {
         taskService.deleteTaskById(id);

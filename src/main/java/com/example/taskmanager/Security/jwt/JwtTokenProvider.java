@@ -1,6 +1,6 @@
 package com.example.taskmanager.Security.jwt;
 
-import com.example.taskmanager.entity.Task;
+import com.example.taskmanager.entity.Role;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,8 +39,9 @@ public class JwtTokenProvider {
     }
 
 
-    public String createToken(String username) {
+    public String createToken(String username,List<Role> roles) {
         Claims claims = Jwts.claims().setSubject(username);
+        claims.put("roles", getRoleNames(roles));
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
@@ -84,12 +85,13 @@ public class JwtTokenProvider {
         }
 
     }
+    private List<String> getRoleNames(List<Role> userRoles) {
+        List<String> result = new ArrayList<>();
 
-    private List<String> getTaskTitles(List<Task> userTasks) {
-        List<String> tasksByTitles = new ArrayList<>();
-        userTasks.forEach(task -> {
-            tasksByTitles.add(task.getTitle());
+        userRoles.forEach(role -> {
+            result.add(role.getName());
         });
-        return tasksByTitles;
+
+        return result;
     }
 }

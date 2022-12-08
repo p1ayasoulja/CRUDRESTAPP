@@ -44,7 +44,7 @@ public class AuthenticationController {
             if (user == null) {
                 throw new UsernameNotFoundException("User with username : " + username + " not found");
             }
-            String token = jwtTokenProvider.createToken(user.getUsername());
+            String token = jwtTokenProvider.createToken(user.getUsername(),user.getRoles());
 
             LoginUserResponse loginUserResponse = new LoginUserResponse(username, token);
             return ResponseEntity.ok(loginUserResponse);

@@ -1,6 +1,7 @@
 package com.example.taskmanager.service.impl;
 
 import com.example.taskmanager.entity.Task;
+import com.example.taskmanager.entity.User;
 import com.example.taskmanager.repository.TaskRepo;
 import com.example.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +61,5 @@ public class TaskServiceImpl implements TaskService {
     public Task getTaskByTitle(String title) {
         return taskRepo.findByTitle(title);
     }
+
 }

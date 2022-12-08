@@ -2,14 +2,13 @@ package com.example.taskmanager.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Entity
 @Table(name = "tasks")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     @Column(name = "is_Completed")
     private boolean isCompleted;
@@ -18,8 +17,17 @@ public class Task {
     @Column(name = "title")
     private String title;
 
-    @ManyToMany(mappedBy = "tasks",fetch = FetchType.LAZY)
-    private List<User> users;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User owner;
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
     public Long getId() {
         return id;

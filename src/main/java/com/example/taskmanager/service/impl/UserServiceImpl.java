@@ -1,7 +1,9 @@
 package com.example.taskmanager.service.impl;
 
+import com.example.taskmanager.entity.Role;
 import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.entity.User;
+import com.example.taskmanager.repository.RoleRepo;
 import com.example.taskmanager.repository.TaskRepo;
 import com.example.taskmanager.repository.UserRepo;
 import com.example.taskmanager.service.UserService;
@@ -9,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,29 +22,33 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final TaskRepo taskRepo;
+    private final RoleRepo roleRepo;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, TaskRepo taskRepo, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepo userRepo, TaskRepo taskRepo, RoleRepo roleRepo, BCryptPasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.taskRepo = taskRepo;
+        this.roleRepo = roleRepo;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User register(User user) {
-        List<Task> taskList = new ArrayList<>();
-        taskList.add(taskRepo.getById(user.getId()));
+        Role roleUser = roleRepo.findByName("ROLE_USER");
+        List<Role> userRoles = new ArrayList<>();
+        userRoles.add(roleUser);
 
-        user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setTasks(taskList, user.getId());
-
+        user.setRoles(userRoles);
         User registeredUser = userRepo.save(user);
-        log.info("IN register - user : {} successfully registered", registeredUser);
+
+        log.info("IN register - user: {} successfully registered", registeredUser);
+
         return registeredUser;
     }
+
 
     @Override
     public List<User> getAll() {
@@ -75,28 +79,29 @@ public class UserServiceImpl implements UserService {
         return userOpt.get();
     }
 
-    @Override
-    public void deleteUser(Long id) {
-        userRepo.deleteById(id);
-        log.info("IN deleteUser - user : {} deleted", id);
-    }
-
-    public List<Task> addTask(List<Task> taskList, Task task) {
-        if (!taskList.contains(task)) {
-            taskList.add(task);
+    public Task addTask(User user, Task task) {
+        if (!user.getTasks().contains(task)) {
+            task.setOwner(user);
             log.info("IN addTaskToUser - task : {} added", task.getId());
-            return taskRepo.saveAll(taskList);
+            return taskRepo.save(task);
         } else {
             log.info("IN addTaskToUser - task : {} already exists", task.getId());
             return null;
         }
     }
 
-    public void deleteTask(List<Task> taskList, Task task) {
-        if (taskList.contains(task)) {
-            taskList.remove(task);
-            taskRepo.saveAll(taskList);
-            log.info("IN deleteTaskFromUser - task : {} deleted", task.getId());
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepo.deleteById(id);
+        log.info("IN deleteUser - user : {} deleted", id);
+    }
+
+    public void deleteTask(User user, Task task) {
+        if (user.getTasks().contains(task)) {
+            task.setOwner(null);
+            taskRepo.save(task);
+            log.info("IN deleteTaskFromUser - task : {} deleted from User", task.getId());
         } else {
             log.info("IN deleteTaskFromUser - task : {} is not contained in User tasks list", task.getId());
         }

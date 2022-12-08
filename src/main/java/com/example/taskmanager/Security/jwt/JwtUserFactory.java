@@ -1,5 +1,6 @@
 package com.example.taskmanager.Security.jwt;
 
+import com.example.taskmanager.entity.Role;
 import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,15 +18,14 @@ public final class JwtUserFactory {
         return new JwtUser(user.getId(),
                 user.getUsername(),
                 user.getPassword(),
-                mapToGrantedAuthority(new ArrayList<>(user.getTasks())),
+                mapToGrantedAuthorities(new ArrayList<>(user.getRoles())),
                 true);
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthority(List<Task> userTasks) {
-        return userTasks.stream()
-                .map(task ->
-                        new SimpleGrantedAuthority(task.getTitle())).collect(Collectors.toList());
-
-
+    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles) {
+        return userRoles.stream()
+                .map(role ->
+                        new SimpleGrantedAuthority(role.getName())
+                ).collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package com.example.taskmanager.service;
 
 import com.example.taskmanager.entity.Task;
+import com.example.taskmanager.entity.User;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface TaskService {
     List<Task> getAllTasks();
 
     void deleteTaskById(Long id);
+
 
 
 }

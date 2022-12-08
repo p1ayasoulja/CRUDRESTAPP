@@ -1,13 +1,11 @@
 package com.example.taskmanager.entity;
 
-import lombok.ToString;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@ToString
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,12 +14,13 @@ public class User {
     private String username;
     @Column(name = "password")
     private String password;
-
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_tasks", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Task> tasks;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
     public Long getId() {
         return id;
@@ -50,9 +49,11 @@ public class User {
     public List<Task> getTasks() {
         return tasks;
     }
-
-    public void setTasks(List<Task> tasks, Long id) {
-        this.tasks = tasks;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
 }
