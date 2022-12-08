@@ -1,6 +1,5 @@
 package com.example.taskmanager.entity;
 
-import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -52,12 +51,8 @@ public class User {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(List<Task> tasks, Long id) {
         this.tasks = tasks;
     }
 
-    public void addTask(Task task)
-    {
-        tasks.add(task);
-    }
 }

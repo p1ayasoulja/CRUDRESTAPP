@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
         user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setTasks(taskList);
+        user.setTasks(taskList, user.getId());
 
         User registeredUser = userRepo.save(user);
         log.info("IN register - user : {} successfully registered", registeredUser);
@@ -79,6 +79,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         userRepo.deleteById(id);
         log.info("IN deleteUser - user : {} deleted", id);
+    }
+    public void addTask(List<Task> taskList,Task task){
+         taskList.add(task);
+         taskRepo.saveAll(taskList);
     }
 
 

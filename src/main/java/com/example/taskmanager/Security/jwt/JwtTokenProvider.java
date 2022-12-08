@@ -39,10 +39,8 @@ public class JwtTokenProvider {
     }
 
 
-    public String createToken(String username, List<Task> taskList) {
+    public String createToken(String username) {
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("tasks", getTaskTitles(taskList));
-
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 

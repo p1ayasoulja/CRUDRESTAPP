@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class AdminController {
-    private UserService userService;
+    private final UserService userService;
     private final TaskService taskService;
 
     public AdminController(UserService userService, TaskService taskService) {
@@ -28,7 +28,7 @@ public class AdminController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation("Получение пользователся по идентификатору")
-    public ResponseEntity<GetUserResponse> getUserById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<GetUserResponse> getUserById(@PathVariable("id") Long id) {
         User user = userService.findById(id);
         if (user == null) {
             return ResponseEntity.noContent().build();
@@ -39,15 +39,16 @@ public class AdminController {
 
     @RequestMapping(value = "/{id}/tasks", method = RequestMethod.GET)
     @ApiOperation("Получить список задач пользователя")
-    public ResponseEntity<ShowTaskList> getUserTasks(@PathVariable(name = "id") Long userid) {
-        User user = userService.findById(userid);
+    public ResponseEntity<ShowTaskList> getUserTasks(@PathVariable("id") Long id) {
+        User user = userService.findById(id);
         return getShowTaskListResponseEntity(user);
     }
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation("Добавление задачи пользователю по индентификатору")
-    public ResponseEntity<ShowTaskList> addTaskToUser(@RequestBody AddTaskToUserRequest addTaskToUserRequest, @PathVariable Long id){
+    public ResponseEntity<ShowTaskList> addTaskToUser(@RequestBody AddTaskToUserRequest addTaskToUserRequest, @PathVariable("id") Long id){
         User user=userService.findById(id);
-        user.addTask(taskService.getTaskById(addTaskToUserRequest.getId()));
+        Task task=taskService.getTaskById(addTaskToUserRequest.getId());
+        userService.addTask(user.getTasks(),task);
         return getShowTaskListResponseEntity(user);
     }
 

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -52,11 +53,4 @@ public class Task {
         this.title = title;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 }
