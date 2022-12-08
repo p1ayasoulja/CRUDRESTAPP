@@ -16,6 +16,7 @@ public interface UserService {
     User findById(Long id);
 
     void deleteUser(Long id);
-    void addTask(List<Task> taskList,Task task);
+    List<Task> addTask(List<Task> taskList,Task task);
+    void deleteTask(List<Task> taskList,Task task);
 
 }

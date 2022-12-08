@@ -80,10 +80,25 @@ public class UserServiceImpl implements UserService {
         userRepo.deleteById(id);
         log.info("IN deleteUser - user : {} deleted", id);
     }
-    public void addTask(List<Task> taskList,Task task){
-         taskList.add(task);
-         taskRepo.saveAll(taskList);
+
+    public List<Task> addTask(List<Task> taskList, Task task) {
+        if (!taskList.contains(task)) {
+            taskList.add(task);
+            log.info("IN addTaskToUser - task : {} added", task.getId());
+            return taskRepo.saveAll(taskList);
+        } else {
+            log.info("IN addTaskToUser - task : {} already exists", task.getId());
+            return null;
+        }
     }
 
-
+    public void deleteTask(List<Task> taskList, Task task) {
+        if (taskList.contains(task)) {
+            taskList.remove(task);
+            taskRepo.saveAll(taskList);
+            log.info("IN deleteTaskFromUser - task : {} deleted", task.getId());
+        } else {
+            log.info("IN deleteTaskFromUser - task : {} is not contained in User tasks list", task.getId());
+        }
+    }
 }

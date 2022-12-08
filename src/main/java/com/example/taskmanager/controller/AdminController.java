@@ -2,10 +2,7 @@ package com.example.taskmanager.controller;
 
 import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.entity.User;
-import com.example.taskmanager.reqres.AddTaskToUserRequest;
-import com.example.taskmanager.reqres.GetUserResponse;
-import com.example.taskmanager.reqres.ShowTaskList;
-import com.example.taskmanager.reqres.ShowTaskResponse;
+import com.example.taskmanager.reqres.*;
 import com.example.taskmanager.service.TaskService;
 import com.example.taskmanager.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +46,14 @@ public class AdminController {
         User user=userService.findById(id);
         Task task=taskService.getTaskById(addTaskToUserRequest.getId());
         userService.addTask(user.getTasks(),task);
+        return getShowTaskListResponseEntity(user);
+    }
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation("Удаление задачи из списка дел пользователя по индентификатору")
+    public ResponseEntity<ShowTaskList> deleteTaskFromUser(@RequestBody DeleteTaskFromUser deleteTaskFromUser, @PathVariable("id") Long id){
+        User user=userService.findById(id);
+        Task task=taskService.getTaskById(deleteTaskFromUser.getId());
+        userService.deleteTask(user.getTasks(),task);
         return getShowTaskListResponseEntity(user);
     }
 
