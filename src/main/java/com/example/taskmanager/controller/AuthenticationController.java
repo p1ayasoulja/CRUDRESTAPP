@@ -2,7 +2,7 @@ package com.example.taskmanager.controller;
 
 import com.example.taskmanager.Security.jwt.JwtTokenProvider;
 import com.example.taskmanager.entity.User;
-import com.example.taskmanager.reqres.LoginUserRequest;
+import com.example.taskmanager.reqres.LoginRegisterUserRequest;
 import com.example.taskmanager.reqres.LoginUserResponse;
 import com.example.taskmanager.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +35,7 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ApiOperation("Логирование пользователя")
-    public ResponseEntity login(@RequestBody LoginUserRequest loginUserRequest) {
+    public ResponseEntity login(@RequestBody LoginRegisterUserRequest loginUserRequest) {
         try {
             String username=loginUserRequest.getUsername();
             authenticationManager.authenticate(

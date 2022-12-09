@@ -20,4 +20,8 @@ public class LoginUserResponse {
         this.username = username;
         this.token = token;
     }
+
+    public LoginUserResponse(String username) {
+        this.username = username;
+    }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-public class LoginUserRequest {
+public class LoginRegisterUserRequest {
     @ApiModelProperty(value = "Имя пользователя")
     private String username;
     @ApiModelProperty(value = "Пароль пользователя")
@@ -19,7 +19,7 @@ public class LoginUserRequest {
     }
 
     @JsonCreator
-    public LoginUserRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
+    public LoginRegisterUserRequest(@JsonProperty("username") String username, @JsonProperty("password") String password) {
         this.username = username;
         this.password = password;
     }
