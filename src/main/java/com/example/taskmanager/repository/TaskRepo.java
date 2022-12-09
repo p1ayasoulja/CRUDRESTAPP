@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface TaskRepo extends JpaRepository<Task, Long> {
     Task findByTitle(String title);
-
-
 }

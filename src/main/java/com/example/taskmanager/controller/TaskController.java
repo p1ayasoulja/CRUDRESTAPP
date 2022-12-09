@@ -72,4 +72,12 @@ public class TaskController {
     public void deleteTaskById(@PathVariable("id") Long id) {
         taskService.deleteTaskById(id);
     }
+
+    @RequestMapping(value = "/complete/{id}", method = RequestMethod.PUT)
+    @ApiOperation("Изменить статус выполнения задачи")
+    public ResponseEntity<ShowTaskResponse> changeTaskComplete(@PathVariable Long id) {
+        Task newTask = taskService.changeTaskComplete(id);
+        ShowTaskResponse showTaskResponse = new ShowTaskResponse(newTask.isCompleted(), newTask.getTitle());
+        return ResponseEntity.ok(showTaskResponse);
+    }
 }

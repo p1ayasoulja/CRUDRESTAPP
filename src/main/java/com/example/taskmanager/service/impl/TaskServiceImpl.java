@@ -1,16 +1,18 @@
 package com.example.taskmanager.service.impl;
 
 import com.example.taskmanager.entity.Task;
-import com.example.taskmanager.entity.User;
 import com.example.taskmanager.repository.TaskRepo;
 import com.example.taskmanager.service.TaskService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class TaskServiceImpl implements TaskService {
     private final TaskRepo taskRepo;
 
@@ -50,8 +52,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTaskById(Long id) {
-        taskRepo.deleteById(id);
+        if(taskRepo.findAll().contains(taskRepo.getById(id))){
+            taskRepo.deleteById(id);
+            log.info("IN deleteTaskFromUser - task : {} deleted from User", id);
+        }
+        else log.info("IN deleteTaskFromUser - task : {} is not exist", id);
     }
+
 
     @Override
     public List<Task> getAllTasks() {
@@ -62,4 +69,9 @@ public class TaskServiceImpl implements TaskService {
         return taskRepo.findByTitle(title);
     }
 
+    public Task changeTaskComplete(Long id) {
+        Task task = taskRepo.getById(id);
+        task.setCompleted(!task.isCompleted());
+        return taskRepo.save(task);
+    }
 }

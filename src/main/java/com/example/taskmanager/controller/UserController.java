@@ -30,5 +30,18 @@ public class UserController {
         this.taskService = taskService;
     }
 
+//    @RequestMapping(value = "/mytasks",method = RequestMethod.GET)
+//    public ResponseEntity<ShowTaskList> getMyTasks(){
+//        List<Task> taskList = taskService.getTasksByOwner();
+//        List<ShowTaskResponse> taskListResponse = new ArrayList<>();
+//        taskList.forEach(task -> taskListResponse.add(
+//                new ShowTaskResponse(task.isCompleted(),
+//                        task.getTitle()))
+//        );
+//        ShowTaskList showTaskList = new ShowTaskList(taskListResponse);
+//        return ResponseEntity.ok(showTaskList);
+//    }
+//    }
+
 
 }
