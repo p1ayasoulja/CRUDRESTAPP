@@ -2,9 +2,10 @@ package com.example.taskmanager.reqres;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
-
-public class ShowTaskResponse {
+@Api(value = "Вывод одной задачи")
+public class GetTaskResponse {
 
     @ApiModelProperty(value = "Статус выполнения таска", required = true)
     private final boolean isCompleted;
@@ -12,7 +13,7 @@ public class ShowTaskResponse {
     private final String title;
 
     @JsonCreator
-    public ShowTaskResponse(@JsonProperty("isCompleted") boolean isCompleted, @JsonProperty("title") String title) {
+    public GetTaskResponse(@JsonProperty("isCompleted") boolean isCompleted, @JsonProperty("title") String title) {
         this.isCompleted = isCompleted;
         this.title = title;
     }

@@ -1,5 +1,7 @@
 package com.example.taskmanager.service.impl;
 
+import com.example.taskmanager.Security.jwt.JwtUser;
+import com.example.taskmanager.Security.jwt.JwtUserFactory;
 import com.example.taskmanager.entity.Role;
 import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.entity.User;
@@ -9,6 +11,9 @@ import com.example.taskmanager.repository.UserRepo;
 import com.example.taskmanager.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepo userRepo;
     private final TaskRepo taskRepo;
     private final RoleRepo roleRepo;
@@ -59,35 +64,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        User userByUsername = userRepo.findUserByUsername(username);
-        if (userByUsername == null) {
+    public Optional<User> findByUsername(String username) {
+       Optional<User> userOpt = userRepo.findUserByUsername(username);
+        if (userOpt.isEmpty()) {
             log.info("IN findByUsername - user : {} was not found", username);
-            return null;
+            return userOpt;
         }
         log.info("IN findByUsername - user : {} found", username);
-        return userByUsername;
+        return userOpt;
     }
 
     @Override
-    public User findById(Long id) {
+    public Optional<User> findById(Long id) {
         Optional<User> userOpt = userRepo.findById(id);
-        if (userOpt.isEmpty()) {
-            log.warn("IN findById - no use found by id : {}", id);
-            return null;
-        }
-        log.info("IN findById - user : {} found", id);
-        return userOpt.get();
+        log.info("IN findById - user : {} found", userOpt);
+        return userOpt;
     }
 
-    public Task addTask(User user, Task task) {
+    public Task addTask(Long userid, Long taskid) {
+        User user=userRepo.getById(userid);
+        Task task=taskRepo.getById(taskid);
         if (!user.getTasks().contains(task)) {
             task.setOwner(user);
             log.info("IN addTaskToUser - task : {} added", task.getId());
             return taskRepo.save(task);
         } else {
             log.info("IN addTaskToUser - task : {} already exists", task.getId());
-            return null;
+            return task;
         }
     }
 
@@ -98,7 +101,9 @@ public class UserServiceImpl implements UserService {
         log.info("IN deleteUser - user : {} deleted", id);
     }
 
-    public void deleteTask(User user, Task task) {
+    public void deleteTask(Long userid, Long taskid) {
+        User user=userRepo.getById(userid);
+        Task task=taskRepo.getById(taskid);
         if (user.getTasks().contains(task)) {
             task.setOwner(null);
             taskRepo.save(task);
@@ -106,5 +111,16 @@ public class UserServiceImpl implements UserService {
         } else {
             log.info("IN deleteTaskFromUser - task : {} is not contained in User tasks list", task.getId());
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+       Optional<User> userOpt = findByUsername(username);
+        if (userOpt.isEmpty()) {
+            throw new UsernameNotFoundException("Cant find user with username :" + username);
+        }
+        JwtUser jwtUser = JwtUserFactory.create(userOpt.get());
+        log.info("IN loadByUsername - user with: {} loaded", username);
+        return jwtUser;
     }
 }

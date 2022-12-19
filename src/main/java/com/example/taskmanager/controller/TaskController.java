@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/manager/tasks")
 public class TaskController {
     private final TaskService taskService;
 
@@ -24,7 +25,7 @@ public class TaskController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation("Создать задачу")
-    public ResponseEntity<CreateTaskResponse> createTask(@RequestBody CreateTaskRequest createTaskRequest) {
+    public ResponseEntity<CreateTaskResponse> createTask2(@RequestBody CreateTaskRequest createTaskRequest) {
         Task newTask = taskService.createTask(createTaskRequest.getTitle(), createTaskRequest.isCompleted());
         CreateTaskResponse createTaskResponse = new CreateTaskResponse(newTask.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(createTaskResponse);
@@ -40,30 +41,34 @@ public class TaskController {
 
     @RequestMapping(value = "/filter", method = RequestMethod.GET)
     @ApiOperation("Отфильтровать задачи по описанию")
-    public ResponseEntity<ShowTaskResponse> FilterTaskByTitle(@RequestBody FilterRequest filterRequest) {
-        Task newTask = taskService.getTaskByTitle(filterRequest.getFilter());
-        ShowTaskResponse showTaskResponse = new ShowTaskResponse(newTask.isCompleted(), newTask.getTitle());
-        return ResponseEntity.ok(showTaskResponse);
+    public ResponseEntity<GetTaskResponse> filterTaskByTitle(@RequestBody FilterTaskByTitleRequest filterTaskByTitleRequest) {
+        Task newTask = taskService.getTaskByTitle(filterTaskByTitleRequest.getTitle());
+        GetTaskResponse getTaskResponse = new GetTaskResponse(newTask.isCompleted(), newTask.getTitle());
+        return ResponseEntity.ok(getTaskResponse);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation("Получить задачу по идентификатору")
-    public ResponseEntity<ShowTaskResponse> getTaskById(@PathVariable("id") Long id) {
-        Task task = taskService.getTaskById(id);
-        ShowTaskResponse showTaskResponse = new ShowTaskResponse(task.isCompleted(), task.getTitle());
-        return ResponseEntity.ok(showTaskResponse);
+    public ResponseEntity<GetTaskResponse> getTaskById(@PathVariable("id") Long id) {
+        Optional<Task> task = taskService.get(id);
+        if (task.isPresent()) {
+            GetTaskResponse getTaskResponse = new GetTaskResponse(task.get().isCompleted(), task.get().getTitle());
+            return ResponseEntity.ok(getTaskResponse);
+        } else return ResponseEntity.notFound().build();
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ApiOperation("Получить весь список задач")
-    public ResponseEntity<ShowTaskList> getAllTasks() {
+    public ResponseEntity<GetTasksResponse> getAllTasks(@RequestBody(required = false)
+                                                        FilterTaskByTitleRequest filterTaskByTitleRequest) {
         List<Task> taskList = taskService.getAllTasks();
-        List<ShowTaskResponse> taskListResponse = new ArrayList<>();
-        taskList.forEach(task -> taskListResponse.add(
-                new ShowTaskResponse(task.isCompleted(),
-                        task.getTitle()))
+        List<GetTaskResponse> taskListResponse = new ArrayList<>();
+        taskList.forEach(task ->
+                taskListResponse.add(
+                        new GetTaskResponse(task.isCompleted(),
+                                task.getTitle()))
         );
-        ShowTaskList showTaskList = new ShowTaskList(taskListResponse);
+        GetTasksResponse showTaskList = new GetTasksResponse(taskListResponse);
         return ResponseEntity.ok(showTaskList);
     }
 
@@ -75,9 +80,9 @@ public class TaskController {
 
     @RequestMapping(value = "/complete/{id}", method = RequestMethod.PUT)
     @ApiOperation("Изменить статус выполнения задачи")
-    public ResponseEntity<ShowTaskResponse> changeTaskComplete(@PathVariable Long id) {
+    public ResponseEntity<ChangeTaskCompleteResponse> changeTaskComplete(@PathVariable Long id) {
         Task newTask = taskService.changeTaskComplete(id);
-        ShowTaskResponse showTaskResponse = new ShowTaskResponse(newTask.isCompleted(), newTask.getTitle());
-        return ResponseEntity.ok(showTaskResponse);
+        ChangeTaskCompleteResponse changeTaskCompleteResponse = new ChangeTaskCompleteResponse(newTask.isCompleted());
+        return ResponseEntity.ok(changeTaskCompleteResponse);
     }
 }

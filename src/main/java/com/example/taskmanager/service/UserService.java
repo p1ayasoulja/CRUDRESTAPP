@@ -4,21 +4,23 @@ import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserService {
-    User register(String username,String password);
+    User register(String username, String password);
 
     List<User> getAll();
 
-    User findByUsername(String username);
+   Optional<User> findByUsername(String username);
 
-    User findById(Long id);
+    Optional<User> findById(Long id);
 
     void deleteUser(Long id);
 
-    Task addTask(User user, Task task);
+    Task addTask(Long userid, Long taskid);
 
-    void deleteTask(User user, Task task);
+    void deleteTask(Long userid, Long taskid);
+
 
 }

@@ -3,72 +3,69 @@ package com.example.taskmanager.controller;
 import com.example.taskmanager.entity.Task;
 import com.example.taskmanager.entity.User;
 import com.example.taskmanager.reqres.*;
-import com.example.taskmanager.service.TaskService;
 import com.example.taskmanager.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/admin/users")
 public class AdminController {
     private final UserService userService;
-    private final TaskService taskService;
 
-    public AdminController(UserService userService, TaskService taskService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
-        this.taskService = taskService;
+
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation("Получение пользователся по идентификатору")
     public ResponseEntity<GetUserResponse> getUserById(@PathVariable("id") Long id) {
-        User user = userService.findById(id);
-        if (user == null) {
+        Optional<User> userOpt = userService.findById(id);
+        if (userOpt.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+        User user = userOpt.get();
         GetUserResponse getUserResponse = new GetUserResponse(user.getUsername(), user.getPassword());
         return ResponseEntity.ok(getUserResponse);
     }
 
     @RequestMapping(value = "/{id}/tasks", method = RequestMethod.GET)
     @ApiOperation("Получить список задач пользователя")
-    public ResponseEntity<ShowTaskList> getUserTasks(@PathVariable("id") Long id) {
-        User user = userService.findById(id);
-        return getShowTaskListResponseEntity(user);
-    }
+    public ResponseEntity<GetTasksResponse> getUserTasks(@PathVariable("id") Long id) {
+        Optional<User> userOpt = userService.findById(id);
+        if (userOpt.isPresent()) {
+            return getShowTaskListResponseEntity(userOpt.get());
+        } else return ResponseEntity.noContent().build();
+
+}
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ApiOperation("Добавление задачи пользователю по индентификатору")
-    public ResponseEntity<ShowTaskResponse> addTaskToUser(@RequestBody AddTaskToUserRequest addTaskToUserRequest, @PathVariable("id") Long id) {
-        User user = userService.findById(id);
-        Task task = taskService.getTaskById(addTaskToUserRequest.getId());
-        userService.addTask(user, task);
-        ShowTaskResponse showTaskResponse = new ShowTaskResponse(task.isCompleted(), task.getTitle());
-        return ResponseEntity.ok(showTaskResponse);
+    public ResponseEntity<HttpStatus> addTaskToUser(@RequestBody AddTaskToUserRequest addTaskToUserRequest, @PathVariable("id") Long id) {
+        userService.addTask(id, addTaskToUserRequest.getId());
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ApiOperation("Удаление задачи из списка дел пользователя по индентификатору")
-    public ResponseEntity<ShowTaskResponse> deleteTaskFromUser(@RequestBody DeleteTaskFromUserRequest deleteTaskFromUserRequest, @PathVariable("id") Long id) {
-        User user = userService.findById(id);
-        Task task = taskService.getTaskById(deleteTaskFromUserRequest.getId());
-        userService.deleteTask(user, task);
-        ShowTaskResponse showTaskResponse = new ShowTaskResponse(task.isCompleted(), task.getTitle());
-        return ResponseEntity.ok(showTaskResponse);
+    public ResponseEntity<HttpStatus> deleteTaskFromUser(@RequestBody DeleteTaskFromUserRequest deleteTaskFromUserRequest, @PathVariable("id") Long id) {
+        userService.deleteTask(id, deleteTaskFromUserRequest.getId());
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
-
-    private ResponseEntity<ShowTaskList> getShowTaskListResponseEntity(User user) {
+    private ResponseEntity<GetTasksResponse> getShowTaskListResponseEntity(User user) {
         List<Task> taskList = user.getTasks();
-        List<ShowTaskResponse> taskResponseList = new ArrayList<>();
+        List<GetTaskResponse> taskResponseList = new ArrayList<>();
         taskList.forEach(task ->
-                taskResponseList.add(new ShowTaskResponse(task.isCompleted(), task.getTitle())));
-        ShowTaskList showTaskLists = new ShowTaskList(taskResponseList);
+                taskResponseList.add(new GetTaskResponse(task.isCompleted(), task.getTitle())));
+        GetTasksResponse showTaskLists = new GetTasksResponse(taskResponseList);
         return ResponseEntity.ok(showTaskLists);
     }
 

@@ -24,19 +24,19 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(String title, boolean isCompleted) {
-        Task task = taskCreator(title, isCompleted);
+        Task task = create(title, isCompleted);
         return taskRepo.save(task);
     }
 
     @Override
     public Task updateTask(Long id, String title, boolean completed) {
 
-        Task task = taskCreator(title, completed);
+        Task task = create(title, completed);
         task.setId(id);
         return taskRepo.save(task);
     }
 
-    private Task taskCreator(String title, boolean isCompleted) {
+    private Task create(String title, boolean isCompleted) {
         Task task = new Task();
         task.setCompleted(isCompleted);
         task.setTitle(title);
@@ -46,17 +46,21 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getTaskById(Long id) {
-        return taskRepo.findById(id).get();
+    public Optional<Task> get(Long id) {
+        if (taskRepo.existsById(id)) {
+            return taskRepo.findById(id);
+        } else {
+            log.info("IN get - task : {} is not exist", id);
+            return Optional.empty();
+        }
     }
 
     @Override
     public void deleteTaskById(Long id) {
-        if(taskRepo.findAll().contains(taskRepo.getById(id))){
+        if (taskRepo.existsById(id)) {
             taskRepo.deleteById(id);
             log.info("IN deleteTaskFromUser - task : {} deleted from User", id);
-        }
-        else log.info("IN deleteTaskFromUser - task : {} is not exist", id);
+        } else log.info("IN deleteTaskFromUser - task : {} is not exist", id);
     }
 
 

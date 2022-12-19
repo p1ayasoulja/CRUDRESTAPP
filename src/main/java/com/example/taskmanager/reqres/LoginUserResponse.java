@@ -1,27 +1,19 @@
 package com.example.taskmanager.reqres;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
-
+@Api(value = "Ответ на авторизацию")
 public class LoginUserResponse {
-    @ApiModelProperty(value = "Имя пользователя")
-    private String username;
     @ApiModelProperty(value = "Токен лога")
-    private String token;
-
-    public String getUsername() {
-        return username;
-    }
+    private  final String token;
 
     public String getToken() {
         return token;
     }
 
-    public LoginUserResponse(String username, String token) {
-        this.username = username;
+    public LoginUserResponse(String token) {
         this.token = token;
     }
 
-    public LoginUserResponse(String username) {
-        this.username = username;
-    }
+
 }

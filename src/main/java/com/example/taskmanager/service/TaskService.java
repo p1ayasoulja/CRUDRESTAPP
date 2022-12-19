@@ -1,9 +1,9 @@
 package com.example.taskmanager.service;
 
 import com.example.taskmanager.entity.Task;
-import com.example.taskmanager.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface TaskService {
@@ -11,7 +11,7 @@ public interface TaskService {
 
     Task updateTask(Long id, String title, boolean completed);
 
-    Task getTaskById(Long id);
+    Optional<Task> get(Long id);
     Task getTaskByTitle(String title);
     List<Task> getAllTasks();
 

@@ -10,7 +10,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
-    @Column(name = "is_Completed")
+    @Column(name = "is_completed")
     private boolean isCompleted;
     @Column(name = "creation_Date")
     private LocalDate creationDate;
