@@ -14,10 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @PropertySource(value = {"classpath:application.properties"})
 @Component
@@ -56,11 +53,11 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
-            return bearerToken.substring(7, bearerToken.length());
+        Optional<String> bearerToken = Optional.ofNullable(req.getHeader("Authorization"));
+        if (bearerToken.isPresent() && bearerToken.get().startsWith("Bearer_")) {
+            return bearerToken.get().substring(7, bearerToken.get().length());
         }
-        return null;
+        return bearerToken.get();
     }
 
     public boolean validateToken(String token) {
