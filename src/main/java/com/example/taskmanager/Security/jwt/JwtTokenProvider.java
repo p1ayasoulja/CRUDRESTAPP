@@ -53,11 +53,11 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        Optional<String> bearerToken = Optional.ofNullable(req.getHeader("Authorization"));
-        if (bearerToken.isPresent() && bearerToken.get().startsWith("Bearer_")) {
-            return bearerToken.get().substring(7, bearerToken.get().length());
+       String bearerToken = req.getHeader("Authorization");
+        if (bearerToken!=null && bearerToken.startsWith("Bearer_")) {
+            return bearerToken.substring(7, bearerToken.length());
         }
-        return bearerToken.get();
+        return bearerToken;
     }
 
     public boolean validateToken(String token) {

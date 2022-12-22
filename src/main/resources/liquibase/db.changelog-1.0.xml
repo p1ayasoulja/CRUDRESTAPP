@@ -105,6 +105,12 @@
             <column name="role_id" value="2"/>
         </insert>
     </changeSet>
+    <changeSet id="1.1.1" author="AndreyGalanov">
+        <insert tableName="user_roles">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="2"/>
+        </insert>
+    </changeSet>
 
 
 </databaseChangeLog>

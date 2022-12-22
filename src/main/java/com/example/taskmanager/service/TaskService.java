@@ -12,7 +12,7 @@ public interface TaskService {
     Task updateTask(Long id, String title, boolean completed);
 
     Optional<Task> get(Long id);
-    Task getTaskByTitle(String title);
+    List<Task> getTasksByTitle(String title);
     List<Task> getAllTasks();
 
     void deleteTaskById(Long id);

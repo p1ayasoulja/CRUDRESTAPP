@@ -39,13 +39,13 @@ public class TaskController {
         return ResponseEntity.ok(updateTaskResponse);
     }
 
-    @RequestMapping(value = "/filter", method = RequestMethod.GET)
-    @ApiOperation("Отфильтровать задачи по описанию")
-    public ResponseEntity<GetTaskResponse> filterTaskByTitle(@RequestBody FilterTaskByTitleRequest filterTaskByTitleRequest) {
-        Task newTask = taskService.getTaskByTitle(filterTaskByTitleRequest.getTitle());
-        GetTaskResponse getTaskResponse = new GetTaskResponse(newTask.isCompleted(), newTask.getTitle());
-        return ResponseEntity.ok(getTaskResponse);
-    }
+//    @RequestMapping(value = "/filter", method = RequestMethod.GET)
+//    @ApiOperation("Отфильтровать задачи по описанию")
+//    public ResponseEntity<GetTaskResponse> filterTaskByTitle(@RequestBody FilterTaskByTitleRequest filterTaskByTitleRequest) {
+//        Task newTask = taskService.getTaskByTitle(filterTaskByTitleRequest.getTitle());
+//        GetTaskResponse getTaskResponse = new GetTaskResponse(newTask.isCompleted(), newTask.getTitle());
+//        return ResponseEntity.ok(getTaskResponse);
+//    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation("Получить задачу по идентификатору")
@@ -57,17 +57,18 @@ public class TaskController {
         } else return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @ApiOperation("Получить весь список задач")
+    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation("Получить весь список задач или отфильтрованный список по описанию")
     public ResponseEntity<GetTasksResponse> getAllTasks(@RequestBody(required = false)
                                                         FilterTaskByTitleRequest filterTaskByTitleRequest) {
-        List<Task> taskList = taskService.getAllTasks();
+        List<Task> taskList = taskService.getTasksByTitle(filterTaskByTitleRequest.getTitle());
         List<GetTaskResponse> taskListResponse = new ArrayList<>();
-        taskList.forEach(task ->
-                taskListResponse.add(
-                        new GetTaskResponse(task.isCompleted(),
-                                task.getTitle()))
+        taskList.forEach(task -> taskListResponse.add(
+                new GetTaskResponse(task.isCompleted(),
+                        task.getTitle()))
         );
+
+
         GetTasksResponse showTaskList = new GetTasksResponse(taskListResponse);
         return ResponseEntity.ok(showTaskList);
     }

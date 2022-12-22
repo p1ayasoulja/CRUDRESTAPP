@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,8 +70,19 @@ public class TaskServiceImpl implements TaskService {
         return taskRepo.findAll();
     }
 
-    public Task getTaskByTitle(String title) {
-        return taskRepo.findByTitle(title);
+    public List<Task> getTasksByTitle( String title) {
+        List<Task> taskListRepo = taskRepo.findAll();
+        List<Task> taskList = new ArrayList<>();
+        if (!title.isEmpty()) {
+            taskListRepo.forEach(task -> {
+                        if (task.getTitle().equals(title))
+                            taskList.add(task);
+                    }
+            );
+            return taskList;
+        } else {
+            return taskListRepo;
+        }
     }
 
     public Task changeTaskComplete(Long id) {
